@@ -9,4 +9,6 @@ import pe.edu.cibertec.msproductservice.models.Product;
 public interface IProductService {
     Page<Product> findAll(int page, int size, String sortBy, String sortDir);
     PageResponseDTO<Product> findAll2(int page, int size, String sortBy, String sortDir);
+
+    PageResponseDTO<Product> findAll2ByName(int page, int size, String sortBy, String sortDir,String name);
 }

@@ -49,4 +49,28 @@ public class ProductServiceImpl implements IProductService {
                         .build())
                 .build();
     }
+
+    @Override
+    public PageResponseDTO<Product> findAll2ByName(int page, int size, String sortBy, String sortDir,String name) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Product> productPage = productRepository.findByNameContainingIgnoreCase(name, pageable);
+
+        return PageResponseDTO.<Product>builder()
+                .items(productPage.getContent())
+                .pagination(PageResponseDTO.PaginationMeta.builder()
+                        .page(productPage.getNumber())
+                        .size(productPage.getSize())
+                        .totalPages(productPage.getTotalPages())
+                        .totalElements(productPage.getTotalElements())
+                        .first(productPage.isFirst())
+                        .last(productPage.isLast())
+                        .build())
+                .build();
+    }
+
 }

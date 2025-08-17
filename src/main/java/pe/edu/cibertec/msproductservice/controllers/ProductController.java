@@ -23,7 +23,7 @@ public class ProductController {
 
     private final IProductService productService;
 
-    @GetMapping
+    @GetMapping("/v1")
     public ResponseEntity<ResponseDTO<Page<Product>>> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
@@ -64,4 +64,28 @@ public class ProductController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<ResponseDTO<PageResponseDTO<Product>>> searchProducts(
+            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            HttpServletRequest request
+    ) {
+        PageResponseDTO<Product> response = productService.findAll2ByName(page, size, sortBy, sortDir,name);
+
+        return ResponseEntity.ok(
+                ResponseDTO.<PageResponseDTO<Product>>builder()
+                        .timestamp(LocalDateTime.now())
+                        .success(true)
+                        .message("Busqueda realizada con exito")
+                        .data(response)
+                        .path(request.getRequestURI())
+                        .status(HttpStatus.OK.value())
+                        .build()
+        );
+    }
+
 }
