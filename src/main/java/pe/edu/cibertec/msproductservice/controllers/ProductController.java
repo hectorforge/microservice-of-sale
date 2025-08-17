@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pe.edu.cibertec.msproductservice.dtos.PageResponseDTO;
 import pe.edu.cibertec.msproductservice.dtos.response.ResponseDTO;
 import pe.edu.cibertec.msproductservice.models.Product;
 import pe.edu.cibertec.msproductservice.services.IProductService;
@@ -42,4 +43,25 @@ public class ProductController {
         );
     }
 
+    @GetMapping("/v2")
+    public ResponseEntity<ResponseDTO<PageResponseDTO<Product>>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "idProduct") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            HttpServletRequest request
+    ) {
+        PageResponseDTO<Product> pageResponse = productService.findAll2(page, size, sortBy, sortDir);
+
+        ResponseDTO<PageResponseDTO<Product>> response = ResponseDTO.<PageResponseDTO<Product>>builder()
+                .timestamp(LocalDateTime.now())
+                .success(true)
+                .message("Productos obtenidos correctamente")
+                .data(pageResponse)
+                .path(request.getRequestURI())
+                .status(HttpStatus.OK.value())
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
 }
