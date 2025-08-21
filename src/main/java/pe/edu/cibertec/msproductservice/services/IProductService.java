@@ -11,4 +11,5 @@ public interface IProductService {
     PageResponseDTO<Product> findAll2(int page, int size, String sortBy, String sortDir);
 
     PageResponseDTO<Product> findAll2ByName(int page, int size, String sortBy, String sortDir,String name);
+    PageResponseDTO<Product> findAll2ByCategory(int page, int size, String sortBy, String sortDir,String categoryName);
 }

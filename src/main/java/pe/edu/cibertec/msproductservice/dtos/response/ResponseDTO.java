@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class ResponseDTO<T> {
+    private int status;
     private LocalDateTime timestamp;
+    private String path;
     private boolean success;
     private String message;
     private T data;
-    private String path;
-    private int status;
 }

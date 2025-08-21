@@ -9,4 +9,5 @@ import pe.edu.cibertec.msproductservice.models.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Long> {
     Page<Product> findByNameContainingIgnoreCase(String name, Pageable pageable);
+    Page<Product> findByCategory_NameIgnoreCase(String name, Pageable pageable);
 }

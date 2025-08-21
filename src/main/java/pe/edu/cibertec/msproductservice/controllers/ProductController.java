@@ -88,4 +88,27 @@ public class ProductController {
         );
     }
 
+    @GetMapping("/category")
+    public ResponseEntity<ResponseDTO<PageResponseDTO<Product>>> getAllProductsByCategoryName(
+            @RequestParam(defaultValue = "") String categoryName,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            HttpServletRequest request
+    ) {
+        PageResponseDTO<Product> response = productService.findAll2ByCategory(page, size, sortBy, sortDir,categoryName);
+
+        return ResponseEntity.ok(
+                ResponseDTO.<PageResponseDTO<Product>>builder()
+                        .timestamp(LocalDateTime.now())
+                        .success(true)
+                        .message("Busqueda realizada con exito")
+                        .data(response)
+                        .path(request.getRequestURI())
+                        .status(HttpStatus.OK.value())
+                        .build()
+        );
+    }
+
 }
