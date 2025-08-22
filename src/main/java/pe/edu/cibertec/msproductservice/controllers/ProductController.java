@@ -111,4 +111,30 @@ public class ProductController {
         );
     }
 
+    @GetMapping("/search-by-category")
+    public ResponseEntity<ResponseDTO<PageResponseDTO<Product>>> searchProductsByCategoryAndName(
+            @RequestParam(defaultValue = "") String categoryName,
+            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            HttpServletRequest request
+    ) {
+        PageResponseDTO<Product> response = productService.findAll2ByProductNameAndCategory(
+                page, size, sortBy, sortDir, categoryName, name
+        );
+
+        return ResponseEntity.ok(
+                ResponseDTO.<PageResponseDTO<Product>>builder()
+                        .timestamp(LocalDateTime.now())
+                        .success(true)
+                        .message("Busqueda por categoria y nombre realizada con exito")
+                        .data(response)
+                        .path(request.getRequestURI())
+                        .status(HttpStatus.OK.value())
+                        .build()
+        );
+    }
+
 }

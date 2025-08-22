@@ -19,7 +19,8 @@ public class ProductServiceImpl implements IProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public Page<Product> findAll(int page, int size, String sortBy, String sortDir) {
+    public Page<Product> findAll(
+            int page, int size, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
@@ -29,7 +30,8 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public PageResponseDTO<Product> findAll2(int page, int size, String sortBy, String sortDir) {
+    public PageResponseDTO<Product> findAll2(
+            int page, int size, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
@@ -51,7 +53,8 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public PageResponseDTO<Product> findAll2ByName(int page, int size, String sortBy, String sortDir,String name) {
+    public PageResponseDTO<Product> findAll2ByName(
+            int page, int size, String sortBy, String sortDir,String name) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
                 ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
@@ -74,7 +77,8 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public PageResponseDTO<Product> findAll2ByCategory(int page, int size, String sortBy, String sortDir, String categoryName) {
+    public PageResponseDTO<Product> findAll2ByCategory(
+            int page, int size, String sortBy, String sortDir, String categoryName) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
                 ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
@@ -94,4 +98,35 @@ public class ProductServiceImpl implements IProductService {
                         .build())
                 .build();
     }
+
+    @Override
+    public PageResponseDTO<Product> findAll2ByProductNameAndCategory(
+            int page, int size, String sortBy, String sortDir,
+            String categoryName, String name) {
+
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name())
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Product> productPage = productRepository.findByCategoryAndProductName(
+                categoryName,
+                name,
+                pageable
+        );
+
+        return PageResponseDTO.<Product>builder()
+                .items(productPage.getContent())
+                .pagination(PageResponseDTO.PaginationMeta.builder()
+                        .page(productPage.getNumber())
+                        .size(productPage.getSize())
+                        .totalPages(productPage.getTotalPages())
+                        .totalElements(productPage.getTotalElements())
+                        .first(productPage.isFirst())
+                        .last(productPage.isLast())
+                        .build())
+                .build();
+    }
+
 }
